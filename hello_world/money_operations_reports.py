@@ -7,7 +7,7 @@ from typing import Sequence
 from datetime import datetime
 
 
-def create_money_operations_from_csv(money_op_as_csv: str) -> Sequence[Dict[str, Any]]:
+def read_money_operations_from_csv(money_op_as_csv: str) -> Sequence[Dict[str, Any]]:
     """
     Each row contains the four comma separated money operation's properties: date, type, sum, tags.
 
