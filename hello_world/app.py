@@ -1,10 +1,11 @@
 import os
-import boto3
 import json
 
+import money_operation_utils
 import money_operations_reports
 
 # import requests
+from hello_world.aws_utils import read_all_lines_froms3key
 
 
 def lambda_handler(event, context):
@@ -40,22 +41,13 @@ def lambda_handler(event, context):
     # loads money operations from csv
     money_op_bucket = os.getenv("money_operations_bucket")
     money_op_file = os.getenv("money_operations_csv_file")
-    money_operations_as_csv = loads_money_operations_froms3key(money_op_bucket, money_op_file)
+    money_operations_as_csv = read_all_lines_froms3key(money_op_bucket, money_op_file)
 
     # creates money operations report as dictionary
-    money_operations = money_operations_reports.read_money_operations_from_csv(money_operations_as_csv)
+    money_operations = money_operation_utils.read_money_operations_from_csv(money_operations_as_csv)
     money_oper_report = money_operations_reports.group_by_year_opertype_month_tag(money_operations)
 
     return {
         "statusCode": 200,
         "body": json.dumps(money_oper_report)
     }
-
-
-def loads_money_operations_froms3key(s3_bucket: str, s3_key_obj: str) -> str:
-    s3 = boto3.resource('s3')
-    s3_object = s3.Object(s3_bucket, s3_key_obj)
-    obj_details = s3_object.get()
-    return obj_details['Body'].read()
-
-

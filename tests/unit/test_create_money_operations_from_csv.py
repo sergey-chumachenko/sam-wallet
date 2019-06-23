@@ -1,5 +1,5 @@
 import datetime
-from hello_world.money_operations_reports import read_money_operations_from_csv
+from money_operation_utils import read_money_operations_from_csv
 
 
 def test_returns_empty_list_if_empty_text():
