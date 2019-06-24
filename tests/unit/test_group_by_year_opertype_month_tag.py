@@ -1,5 +1,5 @@
 import datetime
-from hello_world.money_operations_reports import group_by_year_opertype_month_tag
+from wallet.money_operations_reports import group_by_year_opertype_month_tag
 
 
 def test_if_list_empty_returns_dict_without_keys():

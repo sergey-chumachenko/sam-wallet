@@ -5,7 +5,7 @@ import money_operation_utils
 import money_operations_reports
 
 # import requests
-from hello_world.aws_utils import read_all_lines_froms3key
+from wallet.aws_utils import read_all_lines_froms3key
 
 
 def lambda_handler(event, context):

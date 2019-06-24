@@ -1,9 +1,11 @@
+import json
 from datetime import date
 from unittest.mock import Mock
+from unittest.mock import MagicMock
 
-from hello_world.put_money_operations_from_csv_to_sqs import get_file_name_with_money_operations
-from hello_world.put_money_operations_from_csv_to_sqs import put_money_operations_to_sqs
-from hello_world.put_money_operations_from_csv_to_sqs import lambda_handler
+from wallet.put_money_operations_from_csv_to_sqs import get_file_name_with_money_operations
+from wallet.put_money_operations_from_csv_to_sqs import put_money_operations_to_sqs
+from wallet.put_money_operations_from_csv_to_sqs import lambda_handler
 
 
 class TestPutMoneyOperationsFromCsvToSqs():
@@ -37,8 +39,8 @@ class TestPutMoneyOperationsFromCsvToSqs():
 
         # mocks boto3 SQS client
         sqs_entry = {
-            "Id": 0,
-            "MessageBody": money_operation_a
+            "Id": str(0),
+            "MessageBody": json.dumps(money_operation_a, default=str)
         }
         sqs_client = self.mock_boto3_sqs_client(money_operation_a, sqs_entry)
 
@@ -47,7 +49,7 @@ class TestPutMoneyOperationsFromCsvToSqs():
 
         sqs_client.get_queue_url.assert_called_once_with(QueueName=sqs_queue_name)
         sqs_client.send_message_batch.assert_called_once_with(
-            QueueUrl=sqs_client.get_queue_url.return_value.QueueUrl,
+            QueueUrl=sqs_client.get_queue_url.return_value["QueueUrl"],
             Entries=[sqs_entry]
         )
         assert num_successful == len(money_operations)
@@ -103,10 +105,10 @@ class TestPutMoneyOperationsFromCsvToSqs():
     #     boto3.client.assert_called_once_with("sqs")
 
     def mock_boto3_sqs_client(self, money_operation_a, sqs_entry):
-        queue_url_responce = Mock()
-        queue_url_responce.QueueUrl.return_value = "money_operations_queue"
         sqs_client = Mock()
-        sqs_client.get_queue_url.return_value = queue_url_responce
+        sqs_client.get_queue_url.return_value = {
+            "QueueUrl": "money_operations_queue"
+        }
         sqs_client.send_message_batch.return_value = {
             "Successful": [sqs_entry]
         }

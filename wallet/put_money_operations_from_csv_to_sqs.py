@@ -48,13 +48,13 @@ def put_money_operations_to_sqs(money_operations: Sequence[Dict[str, Any]], sqs_
     msgs = []
     for index, money_operation in enumerate(money_operations):
         msgs.append({
-            "Id": index,
-            "MessageBody": money_operation
+            "Id": str(index),
+            "MessageBody": json.dumps(money_operation, default=str)
         })
 
     # puts it to SQS
     response = sqs_client.send_message_batch(
-        QueueUrl=money_operations_queue.QueueUrl,
+        QueueUrl=money_operations_queue["QueueUrl"],
         Entries=msgs
     )
 
