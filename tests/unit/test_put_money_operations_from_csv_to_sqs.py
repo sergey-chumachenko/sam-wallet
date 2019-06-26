@@ -2,7 +2,7 @@ import json
 from datetime import date
 from unittest.mock import Mock
 
-from wallet.put_money_operations_from_csv_to_sqs import get_file_name_with_money_operations
+from aws_utils import get_file_name_with_money_operations
 from wallet.put_money_operations_from_csv_to_sqs import put_money_operations_to_sqs
 
 

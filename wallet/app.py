@@ -45,7 +45,7 @@ def lambda_handler(event, context):
 
     # creates money operations report as dictionary
     money_operations = money_operation_utils.read_money_operations_from_csv(money_operations_as_csv)
-    money_oper_report = money_operations_reports.group_by_year_opertype_month_tag(money_operations)
+    money_oper_report = money_operations_reports.group_by_year_month_tag(money_operations)
 
     return {
         "statusCode": 200,

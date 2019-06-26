@@ -17,7 +17,7 @@ import money_operation_utils
 
 def lambda_handler(event, _context):
     # gets name of the file with money operations
-    file_name = get_file_name_with_money_operations(event)
+    file_name = aws_utils.get_file_name_with_money_operations(event)
 
     # reads money operations from file
     all_money_op_as_csv = aws_utils.read_all_lines_froms3key(file_name["bucket"], file_name["key"])
@@ -26,18 +26,6 @@ def lambda_handler(event, _context):
     # puts money operations to SQS queue
     sqs_client = boto3.client("sqs")
     put_money_operations_to_sqs(money_operations, os.environ["money_operations_sqs_queue"], sqs_client)
-
-
-def get_file_name_with_money_operations(event):
-    """
-    Returns dictionary with "bucket" and "key" properties as a result
-    :param event: object passed to the lambda handler
-    :return: dictionary
-    """
-    return {
-        "bucket": event['Records'][0]['s3']['bucket']['name'],
-        "key": event['Records'][0]['s3']['object']['key']
-    }
 
 
 def put_money_operations_to_sqs(money_operations: Sequence[Dict[str, Any]], sqs_queue_name: str, sqs_client) -> int:
