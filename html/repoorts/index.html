@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Reports</title>
+    <script src="jquery-3.4.1.min.js"></script>
+</head>
+
+
+<body>
+    <script>
+        $(document).ready(function() {
+            $.get(
+                "report_by_year_month_tag.json",
+                function( data ) {
+                    $("#money-operations-json").html(data)
+                }
+            );
+        });
+    </script>
+    <h1>Money Operations Grouped By Year-Month-Tag</h1>
+
+    <table>
+        <thead>
+            <th>Group Name</th>
+            <th>Total Sum</th>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div id="money-operations-json"></div>
+
+</body>
+</html>
