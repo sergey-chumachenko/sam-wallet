@@ -4,16 +4,13 @@ It transforms money operations from csv-file to json and saves to the object.
 The S3 bucket and object key destination are specified in the following environment variables:
 dest_s3_bucket and dest_s3_obj_key
 """
-import json
 import os
-from typing import Any
-from typing import Dict
-from typing import Sequence
 
 import boto3
 
 import aws_utils
 import money_operation_utils
+from money_operation_utils import save_to_s3
 
 
 def lambda_handler(event, _context):
@@ -25,7 +22,7 @@ def lambda_handler(event, _context):
     money_operations = money_operation_utils.read_money_operations_from_csv(all_money_op_as_csv)
 
     s3_client = boto3.client("s3")
-    return save_money_operations(
+    return save_to_s3(
         money_operations,
         os.environ["dest_s3_bucket"],
         os.environ["dest_s3_obj_key"],
@@ -33,9 +30,3 @@ def lambda_handler(event, _context):
     )
 
 
-def save_money_operations(money_operations: Sequence[Dict[str, Any]], dest_s3_bucket: str, dest_s3_obj_key: str, s3_client):
-    return s3_client.put_object(
-        Bucket=dest_s3_bucket,
-        Key=dest_s3_obj_key,
-        Body=json.dumps(money_operations, default=str)
-    )

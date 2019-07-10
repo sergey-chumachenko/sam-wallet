@@ -1,5 +1,6 @@
 import csv
 import io
+import json
 from datetime import datetime
 from typing import Sequence, Dict, Any
 
@@ -40,3 +41,11 @@ def read_money_operations_from_csv(money_op_as_csv: str) -> Sequence[Dict[str, A
             PROPERTY_TAGS: op_tags
         })
     return money_operations
+
+
+def save_to_s3(money_operations: Sequence[Dict[str, Any]], dest_s3_bucket: str, dest_s3_obj_key: str, s3_client) -> None:
+    s3_client.put_object(
+        Bucket=dest_s3_bucket,
+        Key=dest_s3_obj_key,
+        Body=json.dumps(money_operations, default=str)
+    )
